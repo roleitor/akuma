@@ -61,7 +61,6 @@ export const HomeScreen: React.FC = () => {
           {menuItems.map((item) => (
             <Card
               key={item.path}
-              className="cursor-pointer hover:shadow-xl transition-shadow"
               onClick={() => navigate(item.path)}
             >
               <div className="flex items-center">

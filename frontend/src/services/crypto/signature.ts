@@ -1,6 +1,4 @@
-import { QRPayload } from '../types';
-
-const PUBLIC_KEY_HEX = '04'; // Clave pública embebida (se reemplaza con la real)
+import { QRPayload } from '../../types';
 
 export async function verifySignature(payload: QRPayload): Promise<boolean> {
   try {

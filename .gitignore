@@ -15,6 +15,9 @@ node_modules/
 frontend/dist/
 frontend/.vite/
 
+# Prisma
+backend/node_modules/.prisma/
+
 # IDE
 .vscode/
 .idea/

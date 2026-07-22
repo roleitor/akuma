@@ -1,6 +1,6 @@
 import { Network } from '@capacitor/network';
-import { DatabaseService } from './database/sqlite';
-import { API_BASE_URL } from '../utils/constants';
+import { DatabaseService } from '../database/sqlite';
+import { API_BASE_URL } from '../../utils/constants';
 
 export class SyncService {
   private db: DatabaseService;
@@ -27,7 +27,7 @@ export class SyncService {
 
       for (const verification of pending) {
         try {
-          await fetch(`${API_BASE_URL}/api/verifications`, {
+          await fetch(`${API_BASE_URL}/api/v1/verifications`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(verification),
@@ -47,7 +47,7 @@ export class SyncService {
     if (!connected) return;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/sync/revoked`);
+      const response = await fetch(`${API_BASE_URL}/api/v1/sync/revoked`);
       const data = await response.json();
       if (data.success) {
         await this.db.updateRevokedList(data.data.revoked);

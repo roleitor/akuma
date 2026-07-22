@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Akuma QR Validator</string>
+    <string name="title_activity_main">Akuma QR Validator</string>
+    <string name="package_name">com.akuma.qrvalidator</string>
+    <string name="custom_url_scheme">com.akuma.qrvalidator</string>
+</resources>

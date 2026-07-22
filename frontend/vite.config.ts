@@ -10,7 +10,11 @@ export default defineConfig({
     },
   },
   server: {
-    port: 3000,
+    port: 5173,
+    https: {
+      key: '/tmp/vite-key.pem',
+      cert: '/tmp/vite-cert.pem',
+    },
   },
   build: {
     outDir: 'dist',

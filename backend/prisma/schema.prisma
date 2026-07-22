@@ -1,0 +1,69 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Document {
+  id              String   @id @map("id")
+  clientName      String   @map("client_name")
+  transactionDate String   @map("transaction_date")
+  campaign        String?
+  location        String?
+  formData        Json     @map("form_data")
+  hashDocument    String   @map("hash_document")
+  signature       String
+  status          String   @default("active")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  verifications   Verification[]
+  revokedDocument RevokedDocument?
+
+  @@map("documents")
+}
+
+model Verification {
+  id               String   @id @map("id")
+  documentId       String   @map("document_id")
+  technicianId     String   @map("technician_id")
+  technicianName   String   @map("technician_name")
+  deviceId         String?  @map("device_id")
+  verificationDate DateTime @map("verification_date")
+  latitude         Float?
+  longitude        Float?
+  result           String
+  synced           Boolean  @default(true)
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  document Document @relation(fields: [documentId], references: [id])
+
+  @@index([documentId])
+  @@map("verifications")
+}
+
+model User {
+  id           String   @id @map("id")
+  name         String
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  role         String   @default("technician")
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@map("users")
+}
+
+model RevokedDocument {
+  documentId String   @id @map("document_id")
+  reason     String?
+  revokedBy  String?  @map("revoked_by")
+  revokedAt  DateTime @default(now()) @map("revoked_at")
+
+  document Document @relation(fields: [documentId], references: [id])
+
+  @@map("revoked_documents")
+}
