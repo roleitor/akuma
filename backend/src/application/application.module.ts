@@ -10,6 +10,7 @@ import { BatchVerificationUseCase } from './use-cases/verification/batch-verific
 import { ListVerificationsUseCase } from './use-cases/verification/list-verifications.use-case';
 import { PullDocumentsUseCase } from './use-cases/sync/pull-documents.use-case';
 import { GetRevokedDocumentsUseCase } from './use-cases/sync/get-revoked-documents.use-case';
+import { GenerateDocumentQrUseCase } from './use-cases/document/generate-document-qr.use-case';
 
 @Module({
   imports: [InfrastructureModule],
@@ -24,6 +25,7 @@ import { GetRevokedDocumentsUseCase } from './use-cases/sync/get-revoked-documen
     ListVerificationsUseCase,
     PullDocumentsUseCase,
     GetRevokedDocumentsUseCase,
+    GenerateDocumentQrUseCase,
   ],
   exports: [
     InfrastructureModule,
@@ -37,6 +39,7 @@ import { GetRevokedDocumentsUseCase } from './use-cases/sync/get-revoked-documen
     ListVerificationsUseCase,
     PullDocumentsUseCase,
     GetRevokedDocumentsUseCase,
+    GenerateDocumentQrUseCase,
   ],
 })
 export class ApplicationModule {}

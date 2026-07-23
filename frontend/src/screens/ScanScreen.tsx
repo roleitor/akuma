@@ -37,6 +37,11 @@ export const ScanScreen: React.FC = () => {
     console.error('QR Error:', errorMessage);
   };
 
+  const handleReset = () => {
+    setScannedData(null);
+    setError(null);
+  };
+
   if (scannedData) {
     const parsed: QRPayload = JSON.parse(scannedData);
     return (
@@ -47,10 +52,7 @@ export const ScanScreen: React.FC = () => {
             valid={true}
             transaction={parsed}
             reason="OK"
-            onVerify={() => {
-              setScannedData(null);
-              setError(null);
-            }}
+            onVerify={handleReset}
             onViewDetails={() => navigate('/details', { state: { transaction: parsed } })}
           />
         </div>
@@ -64,7 +66,7 @@ export const ScanScreen: React.FC = () => {
       <div className="p-4">
         <Card className="mb-4">
           <p className="text-center text-gray-600 mb-4">
-            Apunte la cámara al código QR del documento
+            Escanea con la cámara o selecciona una imagen de tu galería
           </p>
           <QRScanner onScan={handleScan} onError={handleError} />
         </Card>
@@ -72,13 +74,23 @@ export const ScanScreen: React.FC = () => {
         {error && (
           <Card className="border-2 border-danger">
             <div className="text-center">
-              <svg className="w-12 h-12 text-danger mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              <svg
+                className="w-12 h-12 text-danger mx-auto mb-2"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                />
               </svg>
               <p className="text-danger font-semibold">{error}</p>
               <button
-                onClick={() => setError(null)}
-                className="mt-4 text-primary-600 hover:text-primary-700"
+                onClick={handleReset}
+                className="mt-4 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-all"
               >
                 Intentar de nuevo
               </button>
