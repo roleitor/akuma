@@ -6,23 +6,34 @@ import { VerificationResult } from '../components/verification/VerificationResul
 import { Card } from '../components/common/Card';
 import { QRPayload } from '../types';
 import { useVerificationStore } from '../stores/useVerificationStore';
+import { syncManager } from '../services/sync/syncManager';
 
 export const ScanScreen: React.FC = () => {
   const navigate = useNavigate();
   const [scannedData, setScannedData] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const { setCurrentResult } = useVerificationStore();
+  const [saving, setSaving] = useState(false);
+  const { setCurrentResult, addToHistory } = useVerificationStore();
+
+  const decodeBase64 = (str: string): string => {
+    try {
+      return atob(str);
+    } catch {
+      return str;
+    }
+  };
 
   const handleScan = (data: string) => {
     try {
-      const parsed: QRPayload = JSON.parse(data);
+      const json = decodeBase64(data);
+      const parsed: QRPayload = JSON.parse(json);
 
       if (!parsed.txn || !parsed.sig) {
         setError('QR inválido: faltan campos requeridos');
         return;
       }
 
-      setScannedData(data);
+      setScannedData(json);
       setCurrentResult({
         valid: true,
         transaction: parsed,
@@ -42,6 +53,35 @@ export const ScanScreen: React.FC = () => {
     setError(null);
   };
 
+  const handleConfirm = async () => {
+    const parsed: QRPayload = JSON.parse(scannedData!);
+    setSaving(true);
+    try {
+      await syncManager.saveVerificationLocally({
+        document_id: parsed.txn,
+        technician_id: 'offline-user',
+        technician_name: 'Usuario offline',
+        verification_date: new Date().toISOString(),
+        result: 'VALID',
+      });
+
+      addToHistory({
+        id: 0,
+        document_id: parsed.txn,
+        technician_id: 'offline-user',
+        technician_name: 'Usuario offline',
+        verification_date: new Date().toISOString(),
+        result: 'VALID',
+        synced: false,
+      });
+
+      navigate('/');
+    } catch (err) {
+      console.error('[Scan] Error al guardar verificación:', err);
+      setSaving(false);
+    }
+  };
+
   if (scannedData) {
     const parsed: QRPayload = JSON.parse(scannedData);
     return (
@@ -55,6 +95,15 @@ export const ScanScreen: React.FC = () => {
             onVerify={handleReset}
             onViewDetails={() => navigate('/details', { state: { transaction: parsed } })}
           />
+          <div className="mt-4">
+            <button
+              onClick={handleConfirm}
+              disabled={saving}
+              className="w-full bg-success hover:bg-success/80 text-white font-semibold py-3 px-4 rounded-lg transition-colors disabled:opacity-50"
+            >
+              {saving ? 'Guardando...' : 'Confirmar verificación'}
+            </button>
+          </div>
         </div>
       </div>
     );
