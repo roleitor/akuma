@@ -22,6 +22,14 @@ export class DocumentRepositoryImpl implements DocumentRepository {
     return entities.map(DocumentMapper.toDomain);
   }
 
+  async findByUpdatedAtSince(since: Date): Promise<Document[]> {
+    const entities = await this.prisma.document.findMany({
+      where: { updatedAt: { gte: since } },
+      orderBy: { updatedAt: 'asc' },
+    });
+    return entities.map(DocumentMapper.toDomain);
+  }
+
   async findAll(pagination: PaginationParams): Promise<PaginatedResult<Document>> {
     const skip = PaginationUtil.getSkip(pagination.page, pagination.limit);
     const [entities, total] = await Promise.all([

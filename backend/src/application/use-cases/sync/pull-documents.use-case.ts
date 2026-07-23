@@ -16,7 +16,8 @@ export class PullDocumentsUseCase {
   ) {}
 
   async execute(dto: PullDocumentsDto): Promise<SyncPullResponseDto> {
-    const documents = await this.documentRepository.findByIds(dto.ids);
+    const since = dto.last_sync ? new Date(dto.last_sync) : new Date(0);
+    const documents = await this.documentRepository.findByUpdatedAtSince(since);
     const revokedDocuments = await this.revokedDocumentRepository.findAll();
 
     return {

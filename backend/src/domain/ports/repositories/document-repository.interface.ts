@@ -5,6 +5,7 @@ export interface DocumentRepository {
   findById(id: string): Promise<Document | null>;
   findByIds(ids: string[]): Promise<Document[]>;
   findAll(pagination: PaginationParams): Promise<PaginatedResult<Document>>;
+  findByUpdatedAtSince(since: Date): Promise<Document[]>;
   save(document: Document): Promise<Document>;
   update(document: Document): Promise<Document>;
   delete(id: string): Promise<void>;

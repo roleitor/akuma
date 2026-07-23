@@ -1,9 +1,9 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsString } from 'class-validator';
+import { ApiPropertyOptional } from '@nestjs/swagger';
+import { IsOptional, IsString } from 'class-validator';
 
 export class PullDocumentsDto {
-  @ApiProperty({ description: 'List of document IDs to pull', example: ['DOC-A1B2C3D4', 'DOC-E5F6G7H8'] })
-  @IsArray()
-  @IsString({ each: true })
-  ids: string[];
+  @ApiPropertyOptional({ description: 'ISO timestamp para sincronización incremental', example: '2024-01-01T00:00:00.000Z' })
+  @IsOptional()
+  @IsString()
+  last_sync?: string;
 }
